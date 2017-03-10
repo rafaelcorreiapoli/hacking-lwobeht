@@ -17,11 +17,13 @@ request('http://api.thebowlapp.com/api/get-user?search=', {
   const hackPromise = users.map(user => {
     const {
       email,
-      facebook_id,
+      photo,
       first_name
     } = user
 
-    if (facebook_id) {
+    if (photo && photo.indexOf('facebook')) {
+      const urlParts = photo.split('/')
+      const facebookId = urlParts[3]
       try {
         return request('http://api.thebowlapp.com/api/login', {
           method: 'POST',
@@ -31,7 +33,7 @@ request('http://api.thebowlapp.com/api/get-user?search=', {
           },
           form: {
             email,
-            facebook_id
+            facebook_id: facebookId
           },
           json: true
         })
